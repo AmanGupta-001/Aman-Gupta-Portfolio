@@ -94,19 +94,18 @@ function Navbar({ active, setActive }) {
   };
 
   return (
-    <nav style={{
-      position: "fixed", top: 0, left: 0, right: 0, zIndex: 100,
-      background: scrolled ? "rgba(6,6,18,0.92)" : "transparent",
-      backdropFilter: scrolled ? "blur(12px)" : "none",
-      borderBottom: scrolled ? "1px solid rgba(139,92,246,0.2)" : "none",
-      transition: "all 0.4s ease",
-      padding: "1rem 2rem",
-      display: "flex", alignItems: "center", justifyContent: "space-between",
+    <nav className="nav-container" style={{
+      background: scrolled || menuOpen ? "rgba(6,6,18,0.96)" : "transparent",
+      backdropFilter: scrolled || menuOpen ? "blur(12px)" : "none",
+      borderBottom: scrolled || menuOpen ? "1px solid rgba(139,92,246,0.2)" : "none",
     }}>
       <span style={{ fontFamily: "'Space Grotesk', sans-serif", fontWeight: 700, fontSize: "1.3rem", color: "#a78bfa", letterSpacing: "-0.5px" }}>
         AG<span style={{ color: "#fff" }}>.</span>
       </span>
-      <div style={{ display: "flex", gap: "0.2rem" }}>
+      <button className="hamburger" onClick={() => setMenuOpen(!menuOpen)} aria-label="Toggle menu">
+        {menuOpen ? "✕" : "☰"}
+      </button>
+      <div className={`nav-links ${menuOpen ? "open" : ""}`}>
         {NAV_LINKS.map(link => (
           <button key={link} onClick={() => scrollTo(link)}
             style={{
@@ -116,6 +115,7 @@ function Navbar({ active, setActive }) {
               padding: "0.4rem 0.75rem", borderRadius: "6px",
               transition: "color 0.2s",
               letterSpacing: "0.3px",
+              textAlign: "left"
             }}
           >{link}</button>
         ))}
@@ -234,9 +234,9 @@ function HeroSection() {
         </div>
 
         {/* Stats row */}
-        <div style={{ display: "flex", gap: "2rem", justifyContent: "center", marginTop: "3.5rem", animation: "fadeUp 0.8s 0.8s ease both", opacity: 0, animationFillMode: "forwards" }}>
+        <div style={{ display: "flex", gap: "2rem", justifyContent: "center", marginTop: "3.5rem", flexWrap: "wrap", animation: "fadeUp 0.8s 0.8s ease both", opacity: 0, animationFillMode: "forwards" }}>
           {[["3+", "Projects Built"], ["7.52", "CGPA"], ["2+", "Certifications"]].map(([n, l]) => (
-            <div key={l} style={{ textAlign: "center" }}>
+            <div key={l} style={{ textAlign: "center", minWidth: "120px" }}>
               <div style={{ fontFamily: "'Syne', sans-serif", fontWeight: 800, fontSize: "1.8rem", color: "#a78bfa" }}>{n}</div>
               <div style={{ fontFamily: "'Space Grotesk', sans-serif", fontSize: "0.75rem", color: "rgba(255,255,255,0.45)", letterSpacing: "1px" }}>{l.toUpperCase()}</div>
             </div>
@@ -250,11 +250,11 @@ function HeroSection() {
 function AboutSection() {
   const [ref, inView] = useInView();
   return (
-    <section id="about" ref={ref} style={{
-      padding: "6rem 2rem", background: "#08081f",
+    <section id="about" ref={ref} className="section-padding" style={{
+      background: "#08081f",
       display: "flex", alignItems: "center", justifyContent: "center",
     }}>
-      <div style={{ maxWidth: 900, width: "100%", display: "grid", gridTemplateColumns: "1fr 1fr", gap: "4rem", alignItems: "center" }}>
+      <div className="grid-2col" style={{ maxWidth: 900, width: "100%" }}>
         {/* Left */}
         <div style={{ opacity: inView ? 1 : 0, transform: inView ? "none" : "translateX(-30px)", transition: "all 0.8s ease" }}>
           <span style={{ color: "#a78bfa", fontFamily: "'Space Grotesk', sans-serif", fontWeight: 500, fontSize: "0.8rem", letterSpacing: "3px", textTransform: "uppercase" }}>About Me</span>
@@ -283,9 +283,9 @@ function AboutSection() {
               background: "rgba(255,255,255,0.03)", border: "1px solid rgba(255,255,255,0.08)",
               borderLeft: `3px solid ${ed.color}`, borderRadius: "12px", padding: "1.5rem", marginBottom: "1rem",
             }}>
-              <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", marginBottom: "0.5rem" }}>
+              <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", flexWrap: "wrap", gap: "0.5rem", marginBottom: "0.5rem" }}>
                 <h3 style={{ fontFamily: "'Space Grotesk', sans-serif", fontWeight: 700, color: "#fff", margin: 0, fontSize: "0.95rem" }}>{ed.school}</h3>
-                <span style={{ color: ed.color, fontSize: "0.75rem", fontFamily: "'Space Grotesk', sans-serif", whiteSpace: "nowrap", marginLeft: "1rem" }}>{ed.period}</span>
+                <span style={{ color: ed.color, fontSize: "0.75rem", fontFamily: "'Space Grotesk', sans-serif", marginLeft: "auto" }}>{ed.period}</span>
               </div>
               <p style={{ color: "rgba(255,255,255,0.5)", fontFamily: "'Space Grotesk', sans-serif", fontSize: "0.85rem", margin: "0 0 0.25rem" }}>{ed.deg}</p>
               <span style={{ background: `${ed.color}22`, color: ed.color, fontFamily: "'Space Grotesk', sans-serif", fontSize: "0.75rem", padding: "0.2rem 0.6rem", borderRadius: "999px" }}>{ed.score}</span>
@@ -311,7 +311,7 @@ function ProjectsSection() {
   const [ref, inView] = useInView();
 
   return (
-    <section id="projects" ref={ref} style={{ padding: "6rem 2rem", background: "#06061a" }}>
+    <section id="projects" ref={ref} className="section-padding" style={{ background: "#06061a" }}>
       <div style={{ maxWidth: 1000, margin: "0 auto" }}>
         <div style={{ textAlign: "center", marginBottom: "3rem", opacity: inView ? 1 : 0, transform: inView ? "none" : "translateY(20px)", transition: "all 0.7s ease" }}>
           <span style={{ color: "#a78bfa", fontFamily: "'Space Grotesk', sans-serif", fontWeight: 500, fontSize: "0.8rem", letterSpacing: "3px", textTransform: "uppercase" }}>Portfolio</span>
@@ -336,9 +336,8 @@ function ProjectsSection() {
 
         {/* Active Project */}
         {PROJECTS.map((p, i) => (
-          <div key={i} style={{
+          <div key={i} className="project-grid" style={{
             display: active === i ? "grid" : "none",
-            gridTemplateColumns: "1fr 1fr", gap: "2rem", alignItems: "start",
             animation: "fadeUp 0.5s ease both",
           }}>
             {/* Left */}
@@ -387,7 +386,7 @@ function SkillsSection() {
   const colors = ["#8b5cf6", "#10b981", "#f59e0b", "#3b82f6", "#ec4899", "#06b6d4"];
 
   return (
-    <section id="skills" ref={ref} style={{ padding: "6rem 2rem", background: "#08081f" }}>
+    <section id="skills" ref={ref} className="section-padding" style={{ background: "#08081f" }}>
       <div style={{ maxWidth: 900, margin: "0 auto" }}>
         <div style={{ textAlign: "center", marginBottom: "3rem", opacity: inView ? 1 : 0, transition: "all 0.7s ease" }}>
           <span style={{ color: "#a78bfa", fontFamily: "'Space Grotesk', sans-serif", fontWeight: 500, fontSize: "0.8rem", letterSpacing: "3px", textTransform: "uppercase" }}>What I Know</span>
@@ -426,7 +425,7 @@ function SkillsSection() {
 function AchievementsSection() {
   const [ref, inView] = useInView();
   return (
-    <section id="achievements" style={{ padding: "6rem 2rem", background: "#06061a" }}>
+    <section id="achievements" className="section-padding" style={{ background: "#06061a" }}>
       <div style={{ maxWidth: 800, margin: "0 auto" }}>
         <div style={{ textAlign: "center", marginBottom: "3rem" }}>
           <span style={{ color: "#a78bfa", fontFamily: "'Space Grotesk', sans-serif", fontWeight: 500, fontSize: "0.8rem", letterSpacing: "3px", textTransform: "uppercase" }}>Recognition</span>
@@ -480,7 +479,7 @@ function ContactSection() {
   };
 
   return (
-    <section id="contact" ref={ref} style={{ padding: "6rem 2rem", background: "#08081f" }}>
+    <section id="contact" ref={ref} className="section-padding" style={{ background: "#08081f" }}>
       <div style={{ maxWidth: 680, margin: "0 auto", opacity: inView ? 1 : 0, transform: inView ? "none" : "translateY(30px)", transition: "all 0.8s ease" }}>
         <div style={{ textAlign: "center", marginBottom: "3rem" }}>
           <span style={{ color: "#a78bfa", fontFamily: "'Space Grotesk', sans-serif", fontWeight: 500, fontSize: "0.8rem", letterSpacing: "3px", textTransform: "uppercase" }}>Let's Connect</span>
@@ -490,20 +489,20 @@ function ContactSection() {
           </p>
         </div>
 
-        <div style={{ background: "rgba(255,255,255,0.03)", border: "1px solid rgba(139,92,246,0.2)", borderRadius: "20px", padding: "2.5rem" }}>
+        <div className="contact-card">
           {["name", "email", "message"].map(field => (
             <div key={field} style={{ marginBottom: "1.25rem" }}>
               <label style={{ display: "block", color: "rgba(255,255,255,0.5)", fontFamily: "'Space Grotesk', sans-serif", fontSize: "0.8rem", letterSpacing: "1px", textTransform: "uppercase", marginBottom: "0.5rem" }}>{field}</label>
               {field === "message" ? (
                 <textarea value={form[field]} onChange={e => setForm(f => ({ ...f, [field]: e.target.value }))} rows={4} placeholder={`Your ${field}...`} style={{
                   width: "100%", background: "rgba(255,255,255,0.05)", border: "1px solid rgba(255,255,255,0.1)",
-                  borderRadius: "10px", padding: "0.85rem 1rem", color: "#fff", fontFamily: "'Space Grotesk', sans-serif", fontSize: "0.9rem",
+                  borderRadius: "10px", padding: "0.85rem 1rem", color: "#fff", fontFamily: "'Space Grotesk', sans-serif", fontSize: "0.95rem",
                   resize: "vertical", outline: "none", boxSizing: "border-box", transition: "border-color 0.2s",
                 }} onFocus={e => e.target.style.borderColor = "rgba(139,92,246,0.6)"} onBlur={e => e.target.style.borderColor = "rgba(255,255,255,0.1)"} />
               ) : (
                 <input type={field === "email" ? "email" : "text"} value={form[field]} onChange={e => setForm(f => ({ ...f, [field]: e.target.value }))} placeholder={`Your ${field}...`} style={{
                   width: "100%", background: "rgba(255,255,255,0.05)", border: "1px solid rgba(255,255,255,0.1)",
-                  borderRadius: "10px", padding: "0.85rem 1rem", color: "#fff", fontFamily: "'Space Grotesk', sans-serif", fontSize: "0.9rem",
+                  borderRadius: "10px", padding: "0.85rem 1rem", color: "#fff", fontFamily: "'Space Grotesk', sans-serif", fontSize: "0.95rem",
                   outline: "none", boxSizing: "border-box", transition: "border-color 0.2s",
                 }} onFocus={e => e.target.style.borderColor = "rgba(139,92,246,0.6)"} onBlur={e => e.target.style.borderColor = "rgba(255,255,255,0.1)"} />
               )}
@@ -533,7 +532,7 @@ function ContactSection() {
         </div>
 
         {/* Social links */}
-        <div style={{ display: "flex", justifyContent: "center", gap: "1rem", marginTop: "2rem" }}>
+        <div style={{ display: "flex", justifyContent: "center", gap: "1rem", marginTop: "2rem", flexWrap: "wrap" }}>
           {[["📧", "Email", "mailto:amangupta.05ob@gmail.com"], ["💼", "LinkedIn", "https://linkedin.com"], ["🐙", "GitHub", "https://github.com"]].map(([ic, label, href]) => (
             <a key={label} href={href} style={{
               display: "flex", alignItems: "center", gap: "0.5rem",
